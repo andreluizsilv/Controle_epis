@@ -1,0 +1,111 @@
+Planejamento do Projeto: Sistema de Controle e Entrega de EPIs
+
+Tecnologias Utilizadas:
+- Frontend: HTML, CSS, JavaScript (Bootstrap 5 para estilização).
+- Backend: Python, Django.
+- Autenticação: JWT (JSON Web Tokens).
+- Hospedagem: AWS, Heroku ou DigitalOcean.
+
+---
+
+1. Planejamento e Requisitos (1 semana)
+- [ok Documentar requisitos do sistema.
+- [ok Criar diagrama ER para o banco de dados.
+- [ok Definir cronograma e tecnologias.
+
+2. Desenvolvimento do Backend (3 semanas)
+- Configuração do Projeto Django:
+  - [ok Criar ambiente virtual e projeto Django.
+  - [ okConfigurar banco de dados (SQLite para desenvolvimento, PostgreSQL para produção).
+
+- Modelos:
+  - [ok UsuarioPessoa: cpf, nome, endereco, numero, cidade, estado, pais, telefone, data_nascimento.
+  - [ ] Funcionario: nome, cpf, departamento, etc.
+  - [ ] EPI: nome, quantidade_disponivel, data_validade, etc.
+  - [ ] EntregaEPI: funcionario, epi, data_entrega, assinatura_digital.
+
+- Views e URLs:
+  - [ ] Criar views para cadastro, listagem, edição e exclusão de usuários, funcionários e EPIs.
+  - [ ] Criar views para entrega de EPIs com captura de assinatura digital.
+
+- Autenticação e Autorização:
+  - [ ] Implementar JWT para autenticação.
+  - [ ] Definir níveis de acesso (admin, funcionário).
+
+- API REST:
+  - [ ] Criar endpoints para todas as funcionalidades usando Django REST Framework.
+
+3. Desenvolvimento do Frontend (3 semanas)
+- Configuração do Frontend:
+  - [ ] Estrutura de pastas para HTML, CSS, JavaScript.
+  - [ ] Integrar Bootstrap 5.
+
+- Telas de Cadastro:
+  - [ ] Formulários para cadastro de usuários, funcionários e EPIs.
+  - [ ] Validação de campos e feedback ao usuário.
+
+- Tela de Entrega de EPIs:
+  - [ ] Interface para selecionar funcionário e EPI.
+  - [ ] Captura de assinatura digital com bibliotecas JavaScript.
+
+- Responsividade:
+  - [ ] Garantir que todas as telas funcionem em dispositivos móveis e desktops.
+
+4. Integração e Testes (2 semanas)
+- Integração Frontend e Backend:
+  - [ ] Conectar telas do frontend com endpoints da API.
+  - [ ] Garantir envio e recebimento correto de dados.
+
+- Testes:
+  - [ ] Testar todas as funcionalidades (cadastros, autenticação, entrega de EPIs).
+  - [ ] Realizar testes de usabilidade e correção de bugs.
+
+- Autenticação e Autorização:
+  - [ ] Testar fluxo de autenticação com JWT.
+  - [ ] Garantir que níveis de acesso funcionem corretamente.
+
+5. Publicação e Hospedagem (1 semana)
+- Configuração do Ambiente de Produção:
+  - [ ] Configurar servidor (AWS, Heroku, DigitalOcean).
+  - [ ] Configurar banco de dados PostgreSQL.
+
+- Publicação:
+  - [ ] Fazer deploy da aplicação.
+  - [ ] Configurar domínio e certificado SSL.
+
+6. Documentação e Treinamento (1 semana)
+- Documentação:
+  - [ ] Documentar código e funcionalidades do sistema.
+  - [ ] Criar manual do usuário.
+
+- Treinamento:
+  - [ ] Treinar usuários finais sobre como utilizar o sistema.
+
+---
+
+Funcionalidades Principais:
+- [ ] Cadastro de Usuários: Diferentes níveis de acesso (admin, funcionário).
+- [ ] Cadastro de Funcionários: Armazenamento de dados pessoais e profissionais.
+- [ ] Cadastro de EPIs: Controle de estoque e validade.
+- [ ] Entrega de EPIs: Seleção de funcionário e EPI, confirmação com assinatura digital.
+- [ ] Relatórios: Histórico de entregas e controle de estoque.
+
+---
+
+Cronograma Sugerido:
+| Etapa                          | Duração Estimada | Status |
+|--------------------------------|------------------|--------|
+| Planejamento e Requisitos      | 1 semana         | [ ]    |
+| Desenvolvimento do Backend     | 3 semanas        | [ ]    |
+| Desenvolvimento do Frontend    | 3 semanas        | [ ]    |
+| Integração e Testes            | 2 semanas        | [ ]    |
+| Publicação e Hospedagem        | 1 semana         | [ ]    |
+| Documentação e Treinamento     | 1 semana         | [ ]    |
+
+---
+
+Profissionais Necessários:
+- [ ] Desenvolvedor Backend: Experiente em Python (Django).
+- [ ] Desenvolvedor Frontend: Experiente em HTML, CSS, JavaScript.
+- [ ] Designer UI/UX: Para interfaces intuitivas e responsivas.
+- [ ] Analista de Infraestrutura: Para configuração e hospedagem.

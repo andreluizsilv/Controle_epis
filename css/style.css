@@ -6,3 +6,7 @@
     opacity: 0;
     visibility: hidden;
 }
+
+.custom-navbar {
+    background-color: aquamarine;
+}
