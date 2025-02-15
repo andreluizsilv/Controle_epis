@@ -20,7 +20,7 @@ Tecnologias Utilizadas:
 
 - Modelos:
   - [ok UsuarioPessoa: cpf, nome, endereco, numero, cidade, estado, pais, telefone, data_nascimento.
-  - [ ] Funcionario: nome, cpf, departamento, etc.
+  - [ ok] Funcionario: nome, cpf, departamento, etc.
   - [ ] EPI: nome, quantidade_disponivel, data_validade, etc.
   - [ ] EntregaEPI: funcionario, epi, data_entrega, assinatura_digital.
 
@@ -41,7 +41,7 @@ Tecnologias Utilizadas:
   - [ ] Integrar Bootstrap 5.
 
 - Telas de Cadastro:
-  - [ ] Formulários para cadastro de usuários, funcionários e EPIs.
+  - [ 2-ok] Formulários para cadastro de 1-usuários, 2-funcionários e 3-EPIs.
   - [ ] Validação de campos e feedback ao usuário.
 
 - Tela de Entrega de EPIs:

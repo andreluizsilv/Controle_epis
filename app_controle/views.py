@@ -3,8 +3,10 @@ from django.contrib import messages
 from .forms import PessoaForm
 from .models import Pessoa, Funcionario
 
+
 def home(request):
     return render(request, 'home.html')
+
 
 def cadastro_pessoa(request):
     if request.method == "POST":
@@ -26,26 +28,39 @@ def pesquisar_funcionario(request):
         cpf = request.POST.get('cpf')
         try:
             pessoa = Pessoa.objects.get(cpf=cpf)
-            return redirect('funcionarios/cadastrar_funcionario.html', cpf=pessoa.cpf)  # Redireciona para cadastrar_funcionario.html
+
+            # Se a pessoa já for um funcionário, redireciona e exibe um alerta
+            if Funcionario.objects.filter(pessoa=pessoa).exists():
+                messages.error(request, "Funcionário já cadastrado!")
+                return redirect('pesquisar_funcionario')
+
+            return redirect('cadastrar_funcionario', cpf=pessoa.cpf)
         except Pessoa.DoesNotExist:
-            return redirect('pessoas/cadastro_pessoa')  # Redireciona para pesquisar_funcionario.html
+            messages.error(request, "Pessoa não encontrada! Cadastre primeiro.")
+            return redirect('cadastro_pessoa')
+
     return render(request, 'funcionarios/pesquisar_funcionario.html')
 
 
 def cadastrar_funcionario(request, cpf):
-    pessoa = get_object_or_404(Pessoa, cpf=cpf)  # Busca a pessoa pelo CPF
+    pessoa = get_object_or_404(Pessoa, cpf=cpf)
+
+    # Verifica se a pessoa já é um funcionário
+    if Funcionario.objects.filter(pessoa=pessoa).exists():
+        messages.error(request, "Funcionário já cadastrado!")
+        return redirect('pesquisar_funcionario')
 
     if request.method == 'POST':
         data_admissao = request.POST.get('data_admissao')
         funcao = request.POST.get('funcao')
 
-        # Cria uma nova instância de Funcionario
         funcionario = Funcionario(
             pessoa=pessoa,
             data_admissao=data_admissao,
             funcao=funcao,
         )
         funcionario.save()
-        return redirect('home')  # Redireciona para a página inicial após o cadastro
+        messages.success(request, "Cadastro realizado com sucesso!")  # Mensagem de sucesso
+        return redirect('home')
 
     return render(request, 'funcionarios/cadastrar_funcionario.html', {'pessoa': pessoa})
