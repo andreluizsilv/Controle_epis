@@ -1,0 +1,51 @@
+<!-- templates/epis/cadastrar_epi.html -->
+{% extends 'base.html' %}
+
+{% block titulo %}
+    Cadastrar EPI
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Cadastrar EPI</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.codigo_barras.id_for_label }}" class="form-label">Código de Barras:</label>
+                            <div class="input-group">
+                                {{ form.codigo_barras }}
+                                <button type="button" class="btn btn-secondary" id="gerar-codigo-btn">Gerar Código</button>
+                            </div>
+                        </div>
+                        {{ form.as_p }}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('gerar-codigo-btn').addEventListener('click', function() {
+        fetch("{% url 'gerar_codigo_barras' %}", {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('{{ form.codigo_barras.id_for_label }}').value = data.novo_codigo;
+        });
+    });
+</script>
+{% endblock %}

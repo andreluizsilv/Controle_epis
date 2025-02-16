@@ -1,4 +1,5 @@
 from django.db import models
+from .utils import gerar_codigo_barras
 
 class Pessoa(models.Model):
     cpf = models.CharField(max_length=14, primary_key=True, unique=True, verbose_name="CPF")
@@ -22,3 +23,27 @@ class Funcionario(models.Model):
 
     def __str__(self):
         return f'{self.pessoa.nome} - Cargo: {self.funcao}'
+
+
+
+class EPI(models.Model):
+    CATEGORIAS_CHOICES = [
+        ('Proteção Auditiva', 'Proteção Auditiva'),
+        ('Proteção Facial', 'Proteção Facial'),
+        ('Proteção para os Pés', 'Proteção para os Pés'),
+        ('Proteção contra Quedas', 'Proteção contra Quedas'),
+        ('Proteção para as Mãos', 'Proteção para as Mãos'),
+        ('Proteção Ocular', 'Proteção Ocular'),
+        ('Proteção para Cabeça', 'Proteção para Cabeça'),
+    ]
+
+    codigo_barras = models.CharField(max_length=50, primary_key=True, verbose_name="Código de Barras")
+    nome = models.CharField(max_length=100, verbose_name="Nome do EPI")
+    categoria = models.CharField(max_length=50, choices=CATEGORIAS_CHOICES, verbose_name="Categoria")
+    validade = models.DateField(null=True, blank=True, verbose_name="Data de Validade")
+    fabricante = models.CharField(max_length=100, verbose_name="Fabricante")
+    quantidade_disponivel = models.PositiveIntegerField(default=0, verbose_name="Quantidade Disponível")
+
+    def __str__(self):
+        return f"{self.nome} (Cód: {self.codigo_barras}, Qtd: {self.quantidade_disponivel})"
+

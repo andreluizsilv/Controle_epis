@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Detalhes do EPI</h2>
+<p><strong>Nome:</strong> {{ epi.nome }}</p>
+<p><strong>Categoria:</strong> {{ epi.categoria }}</p>
+<p><strong>Validade:</strong> {{ epi.validade }}</p>
+<p><strong>Fabricante:</strong> {{ epi.fabricante }}</p>
+<p><strong>Quantidade Disponível:</strong> {{ epi.quantidade_disponivel }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="codigo_barras" value="{{ epi.codigo_barras }}">
+    <input type="number" name="quantidade" min="1" placeholder="Quantidade a adicionar">
+    <button type="submit">Atualizar Estoque</button>
+</form>
+{% endblock %}

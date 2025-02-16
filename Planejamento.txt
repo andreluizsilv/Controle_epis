@@ -21,7 +21,16 @@ Tecnologias Utilizadas:
 - Modelos:
   - [ok UsuarioPessoa: cpf, nome, endereco, numero, cidade, estado, pais, telefone, data_nascimento.
   - [ ok] Funcionario: nome, cpf, departamento, etc.
-  - [ ] EPI: nome, quantidade_disponivel, data_validade, etc.
+  - [ ] EPI: nome( Capacete de Segurança;
+                    Protetor Auditivo;
+                    Protetor auditivo tipo concha;
+                    Botina de Segurança;
+                    Máscara de Segurança;
+                    Máscara para proteção contra produtos químicos;
+                    Cinto de segurança tipo paraquedista;
+                    Luva de raspa;
+                    Luva de látex;
+                    Óculos de Proteção), quantidade_disponivel,.
   - [ ] EntregaEPI: funcionario, epi, data_entrega, assinatura_digital.
 
 - Views e URLs:
