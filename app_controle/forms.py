@@ -1,6 +1,6 @@
 from django import forms
-from .models import Pessoa, EPI
-from .utils import gerar_codigo_barras
+from .models import *
+
 
 class PessoaForm(forms.ModelForm):
     class Meta:
@@ -32,4 +32,18 @@ class EPIForm(forms.ModelForm):
             'fabricante': forms.TextInput(attrs={'class': 'form-control'}),
             'quantidade_disponivel': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+class EntregaEpisForm(forms.ModelForm):
+    class Meta:
+        model = EntregaEpis
+        fields = ['documento', 'funcionario', 'epi', 'data_entrega']
+        widgets = {
+            'data_entrega': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
 
+class DevolucaoEpisForm(forms.ModelForm):
+    class Meta:
+        model = EntregaEpis
+        fields = ['devolvido', 'data_devolucao']
+        widgets = {
+            'data_devolucao': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }

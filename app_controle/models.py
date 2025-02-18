@@ -1,5 +1,5 @@
 from django.db import models
-from .utils import gerar_codigo_barras
+from datetime import date
 
 class Pessoa(models.Model):
     cpf = models.CharField(max_length=14, primary_key=True, unique=True, verbose_name="CPF")
@@ -47,3 +47,14 @@ class EPI(models.Model):
     def __str__(self):
         return f"{self.nome} (Cód: {self.codigo_barras}, Qtd: {self.quantidade_disponivel})"
 
+
+class EntregaEpis(models.Model):
+    documento = models.ForeignKey(Pessoa, on_delete=models.CASCADE, verbose_name="Documento")
+    funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE, verbose_name="Funcionário")
+    epi = models.ForeignKey(EPI, on_delete=models.CASCADE, verbose_name="EPI")
+    data_entrega = models.DateField(default=date.today, verbose_name="Data de Entrega")
+    devolvido = models.BooleanField(default=False, verbose_name="Devolvido")
+    data_devolucao = models.DateField(null=True, blank=True, verbose_name="Data de Devolução")
+
+    def __str__(self):
+        return f"Entrega de {self.epi.nome} para {self.funcionario.pessoa.nome} em {self.data_entrega}"

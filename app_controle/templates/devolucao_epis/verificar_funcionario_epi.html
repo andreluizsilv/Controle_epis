@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    Pesquisar Funcionário e EPI
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Pesquisar Funcionário e EPI</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="cpf" class="form-label">CPF do Funcionário</label>
+                            <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Digite o CPF" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="codigo_barras" class="form-label">Código de Barras do EPI</label>
+                            <input type="text" class="form-control" id="codigo_barras" name="codigo_barras" placeholder="Digite o Código de Barras" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Pesquisar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
