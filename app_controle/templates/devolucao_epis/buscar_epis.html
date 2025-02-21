@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    Buscar EPIs para Devolução
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white text-center">
+                    <h3>Buscar EPIs para Devolução</h3>
+                </div>
+                <div class="card-body">
+                    <form method="GET">
+                        <label for="cpf">Digite o CPF:</label>
+                        <input type="text" name="cpf" id="cpf" class="form-control" required>
+                        <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+                    </form>
+
+                    {% if epis_emprestados %}
+                        <h4 class="mt-4">EPIs Emprestados</h4>
+                        <form method="POST" action="{% url 'registrar_devolucao' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="cpf" value="{{ cpf }}">
+                            <ul class="list-group mt-3">
+                                {% for epi in epis_emprestados %}
+                                    <li class="list-group-item">
+                                        <input type="checkbox" name="epis_devolvidos" value="{{ epi.id }}">
+                                        {{ epi.epi }} - Entregue em: {{ epi.data_entrega|date:"d/m/Y" }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <button type="submit" class="btn btn-success mt-3">Registrar Devolução</button>
+                        </form>
+                    {% elif cpf %}
+                        <p class="text-danger mt-3">Nenhum EPI emprestado encontrado para este CPF.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

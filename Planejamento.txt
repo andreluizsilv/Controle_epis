@@ -31,11 +31,11 @@ Tecnologias Utilizadas:
                     Luva de raspa;
                     Luva de látex;
                     Óculos de Proteção), quantidade_disponivel,.
-  - [ ] EntregaEPI: funcionario, epi, data_entrega.
+  - [ ok] EntregaEPI: funcionario, epi, data_entrega.
 
 - Views e URLs:
   - [ ] Criar views para cadastro, listagem, edição e exclusão de usuários, funcionários e EPIs.
-  - [ ] Criar views para entrega de EPIs com captura de assinatura digital.
+  - [ ] Criar views para entrega de EPIs.
 
 - Autenticação e Autorização:
   - [ ] Implementar JWT para autenticação.
@@ -46,8 +46,8 @@ Tecnologias Utilizadas:
 
 3. Desenvolvimento do Frontend (3 semanas)
 - Configuração do Frontend:
-  - [ ] Estrutura de pastas para HTML, CSS, JavaScript.
-  - [ ] Integrar Bootstrap 5.
+  - [ ok] Estrutura de pastas para HTML, CSS, JavaScript.
+  - [ ok] Integrar Bootstrap 5.
 
 - Telas de Cadastro:
   - [ 2-ok] Formulários para cadastro de 1-usuários, 2-funcionários e 3-EPIs.
@@ -55,7 +55,6 @@ Tecnologias Utilizadas:
 
 - Tela de Entrega de EPIs:
   - [ ] Interface para selecionar funcionário e EPI.
-  - [ ] Captura de assinatura digital com bibliotecas JavaScript.
 
 - Responsividade:
   - [ ] Garantir que todas as telas funcionem em dispositivos móveis e desktops.

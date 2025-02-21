@@ -19,7 +19,13 @@
                     <a class="nav-link" href="{% url 'verificar_funcionario_epi' %}" class="btn btn-secondary mt-2">Registrar Empréstimo de EPI</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'registrar_devolucao' entrega_id=1 %}" class="btn btn-secondary mt-2">Registrar Devolução de EPI</a>
+                    <a class="nav-link" href="{% url 'buscar_epis_para_devolucao' %}" class="btn btn-secondary mt-2">Registrar devolução de EPIs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'listar_epis_emprestados' %}" class="btn btn-secondary mt-2"> Listas de EPIs Emprestrados </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'gerar_codigo_barras' %}" class="btn btn-secondary mt-2"> Gerar Código de Barras </a>
                 </li>
             </ul>
         </div>

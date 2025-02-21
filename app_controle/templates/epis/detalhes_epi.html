@@ -1,16 +1,39 @@
 {% extends 'base.html' %}
-{% block content %}
-<h2>Detalhes do EPI</h2>
-<p><strong>Nome:</strong> {{ epi.nome }}</p>
-<p><strong>Categoria:</strong> {{ epi.categoria }}</p>
-<p><strong>Validade:</strong> {{ epi.validade }}</p>
-<p><strong>Fabricante:</strong> {{ epi.fabricante }}</p>
-<p><strong>Quantidade Disponível:</strong> {{ epi.quantidade_disponivel }}</p>
 
-<form method="post">
-    {% csrf_token %}
-    <input type="hidden" name="codigo_barras" value="{{ epi.codigo_barras }}">
-    <input type="number" name="quantidade" min="1" placeholder="Quantidade a adicionar">
-    <button type="submit">Atualizar Estoque</button>
-</form>
+{% block titulo %}
+    Detalhes do EPI
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Detalhes do EPI</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Informações do EPI -->
+                    <p><strong>Nome:</strong> {{ epi.nome }}</p>
+                    <p><strong>Categoria:</strong> {{ epi.categoria }}</p>
+                    <p><strong>Validade:</strong> {{ epi.validade }}</p>
+                    <p><strong>Fabricante:</strong> {{ epi.fabricante }}</p>
+                    <p><strong>Quantidade Disponível:</strong> {{ epi.quantidade_disponivel }}</p>
+
+                    <!-- Formulário para Atualizar Estoque -->
+                    <form method="post" action="{% url 'cadastrar_ou_atualizar_epi' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="quantidade" class="form-label">Quantidade a Adicionar</label>
+                            <input type="number" name="quantidade" class="form-control" min="1" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Atualizar Estoque</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

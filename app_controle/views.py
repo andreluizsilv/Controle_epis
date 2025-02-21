@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import *
 from .models import *
-from django.http import JsonResponse
 from .utils import gerar_codigo_barras
 
 def home(request):
@@ -68,106 +67,161 @@ def cadastrar_funcionario(request, cpf):
 
 
 def cadastrar_epi(request):
+    codigo_barras = request.GET.get('codigo_barras', '')
+
     if request.method == 'POST':
         form = EPIForm(request.POST)
-        if 'gerar_codigo' in request.POST:
-            novo_codigo = form.gerar_codigo_barras()
-            return render(request, 'epis/cadastrar_epi.html', {'form': form, 'novo_codigo': novo_codigo})
-        elif form.is_valid():
+        if form.is_valid():
             form.save()
-            messages.success(request, "Cadastro realizado com sucesso!")  # Mensagem de sucesso
-            return redirect('lista_epis')
+            messages.success(request, "EPI cadastrado com sucesso!")
+            return redirect('buscar_epi')
     else:
-        form = EPIForm()
+        form = EPIForm(initial={'codigo_barras': codigo_barras})
+
     return render(request, 'epis/cadastrar_epi.html', {'form': form})
 
 
+def atualizar_epi(request, epi_nome):
+    epi = get_object_or_404(EPI, nome=epi_nome)
 
-def gerar_codigo_barras_view(request):
-    if request.method == 'GET' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        novo_codigo = gerar_codigo_barras()
-        return JsonResponse({'novo_codigo': novo_codigo})
-    return JsonResponse({'erro': 'Requisição inválida'}, status=400)
+    if request.method == 'POST':
+        form = EPIForm(request.POST, instance=epi)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"EPI {epi.nome} atualizado com sucesso!")
+            return redirect('buscar_epi')
+    else:
+        form = EPIForm(instance=epi)
 
+    return render(request, 'epis/cadastrar_epi.html', {'form': form, 'epi': epi})
 
 def buscar_epi(request):
-    nome = request.GET.get('nome', '')
+    codigo_barras = request.GET.get('codigo_barras', '').strip()
 
-    if nome:
-        try:
-            epi = EPI.objects.get(nome__iexact=nome)
-            return render(request, 'epis/detalhes_epi.html', {'epi': epi})
-        except EPI.DoesNotExist:
+    if codigo_barras:
+        epi = EPI.objects.filter(codigo_barras=codigo_barras).first()
+        if epi:
+            # Se o EPI já existir, atualizar a quantidade disponível
+            nova_quantidade = int(request.GET.get('nova_quantidade', 0))
+            epi.quantidade_disponivel += nova_quantidade
+            epi.save()
+            messages.success(request, f"EPI {epi.nome} atualizado com sucesso!")
+            return redirect('buscar_epi')
+        else:
+            # Se não existir, redireciona para o cadastro com o código preenchido
             return redirect('cadastrar_epi')
 
     return render(request, 'epis/buscar_epi.html')
 
 
 
+def gerar_codigo_barras_view(request):
+    codigo_barras = gerar_codigo_barras()  # Gera um código novo
+    return render(request, 'epis/gerar_codigo.html', {'codigo_barras': codigo_barras})
+
+
+
 def verificar_funcionario_epi(request):
     if request.method == 'POST':
-        cpf = request.POST.get('cpf')
-        codigo_barras = request.POST.get('codigo_barras')
+        cpf = request.POST.get('cpf', '').strip().replace('.', '').replace('-', '')  # Remove formatação do CPF
+        codigo_barras = request.POST.get('codigo_barras', '').strip()
 
+        # Verifica se a Pessoa existe pelo CPF
         try:
-            pessoa = Pessoa.objects.get(cpf=cpf)
-            funcionario = Funcionario.objects.get(pessoa=pessoa)
-        except Pessoa.DoesNotExist:
+            pessoa = get_object_or_404(Pessoa, cpf=cpf)
+        except:
             messages.error(request, "Pessoa não encontrada! Cadastre primeiro.")
             return redirect('cadastro_pessoa')
-        except Funcionario.DoesNotExist:
+
+        # Verifica se a Pessoa é um Funcionário
+        try:
+            funcionario = get_object_or_404(Funcionario, pessoa=pessoa)
+        except:
             messages.error(request, "Funcionário não encontrado! Cadastre primeiro.")
             return redirect('cadastrar_funcionario', cpf=cpf)
 
+        # Verifica se o EPI existe pelo código de barras
         try:
-            epi = EPI.objects.get(codigo_barras=codigo_barras)
-            if epi.quantidade_disponivel <= 0:
-                messages.error(request, "EPI indisponível no momento.")
-                return redirect('buscar_epi')
-        except EPI.DoesNotExist:
+            epi = get_object_or_404(EPI, codigo_barras=codigo_barras)
+        except:
             messages.error(request, "EPI não encontrado! Cadastre primeiro.")
             return redirect('cadastrar_epi')
 
-        context = {
-            'funcionario': funcionario,
-            'epi': epi,
-        }
-        return render(request, 'devolucao_epis/registrar_entrega.html', context)
+        # Verifica se o EPI tem quantidade disponível
+        if epi.quantidade_disponivel <= 0:
+            messages.error(request, "EPI indisponível no momento.")
+            return redirect('buscar_epi')
+
+        # Se tudo estiver correto, renderiza a página de entrega com os dados do funcionário e EPI
+        return render(request, 'devolucao_epis/registrar_entrega.html', {'funcionario': funcionario, 'epi': epi})
 
     return render(request, 'devolucao_epis/verificar_funcionario_epi.html')
+
+
 
 def registrar_entrega(request):
     if request.method == 'POST':
         form = EntregaEpisForm(request.POST)
         if form.is_valid():
             entrega = form.save(commit=False)
-            entrega.devolvido = False
-            entrega.save()
-            entrega.epi.quantidade_disponivel -= 1
-            entrega.epi.save()
-            messages.success(request, "EPI entregue com sucesso!")
-            return redirect('listar_epis_emprestados')
+            if entrega.epi.quantidade_disponivel > 0:
+                entrega.save()
+                entrega.epi.quantidade_disponivel -= 1
+                entrega.epi.save()
+                messages.success(request, "EPI entregue com sucesso!")
+                return redirect('listar_epis_emprestados')
+            else:
+                messages.error(request, "EPI indisponível para entrega.")
     else:
         form = EntregaEpisForm()
+
     return render(request, 'devolucao_epis/registrar_entrega.html', {'form': form})
 
-def registrar_devolucao(request, entrega_id):
-    entrega = get_object_or_404(EntregaEpis, id=entrega_id)
+
+def buscar_epis_para_devolucao(request):
+    cpf = request.GET.get('cpf', '')
+    epis_emprestados = []
+
+    if cpf:
+        epis_emprestados = EntregaEpi.objects.filter(funcionario__pessoa__cpf=cpf)
+
+    return render(request, 'devolucao_epis/buscar_epis.html', {'epis_emprestados': epis_emprestados, 'cpf': cpf})
+
+
+def registrar_devolucao(request):
     if request.method == 'POST':
-        form = DevolucaoEpisForm(request.POST, instance=entrega)
-        if form.is_valid():
-            devolucao = form.save(commit=False)
-            devolucao.devolvido = True
-            devolucao.data_devolucao = date.today()
-            devolucao.save()
-            devolucao.epi.quantidade_disponivel += 1
-            devolucao.epi.save()
-            messages.success(request, "EPI devolvido com sucesso!")
-            return redirect('listar_epis_emprestados')
-    else:
-        form = DevolucaoEpisForm(instance=entrega)
-    return render(request, 'devolucao_epis/registrar_devolucao.html', {'form': form, 'entrega': entrega})
+        cpf = request.POST.get('cpf')
+        epis_devolvidos_ids = request.POST.getlist('epis_devolvidos')
+
+        if epis_devolvidos_ids:
+            for epi_id in epis_devolvidos_ids:
+                entrega = get_object_or_404(EntregaEpi, id=epi_id)
+
+                # Criando o registro de devolução
+                devolucao = DevolverEpi.objects.create(
+                    documento=entrega.documento,
+                    funcionario=entrega.funcionario,
+                    epi=entrega.epi,
+                    data_devolucao=date.today()
+                )
+
+                # Atualizando a quantidade disponível
+                entrega.epi.quantidade_disponivel += 1
+                entrega.epi.save()
+
+                # Removendo a entrega original
+                entrega.delete()
+
+            messages.success(request, "EPI(s) devolvido(s) com sucesso!")
+
+        return redirect('buscar_epis_para_devolucao')
+
+    return redirect('home')
+
 
 def listar_epis_emprestados(request):
-    emprestados = EntregaEpis.objects.filter(devolvido=False)
-    return render(request, 'devolucao_epis/listar_epis_emprestados.html', {'emprestados': emprestados})
+    # Pegamos todos os IDs de EPIs que já foram devolvidos
+    epis_devolvidos = DevolverEpi.objects.values_list('epi_id', flat=True)
+    # Filtramos os EPIs entregues que ainda não estão na lista dos devolvidos
+    epis_emprestados = EntregaEpi.objects.filter(epi_id__in=epis_devolvidos)
+    return render(request, 'devolucao_epis/listar_epis_emprestados.html', {'emprestados': epis_emprestados})

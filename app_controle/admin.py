@@ -4,6 +4,7 @@ from .models import *
 admin.site.register(Pessoa)
 admin.site.register(Funcionario)
 admin.site.register(EPI)
-admin.site.register(EntregaEpis)
+admin.site.register(EntregaEpi)
+admin.site.register(DevolverEpi)
 
 

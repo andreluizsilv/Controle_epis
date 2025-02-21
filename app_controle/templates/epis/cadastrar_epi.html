@@ -1,8 +1,7 @@
-<!-- templates/epis/cadastrar_epi.html -->
 {% extends 'base.html' %}
 
 {% block titulo %}
-    Cadastrar EPI
+    Cadastrar ou Atualizar EPI
 {% endblock %}
 
 {% block content %}
@@ -11,19 +10,49 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header bg-primary text-white text-center">
-                    <h3>Cadastrar EPI</h3>
+                    <h3>Cadastrar ou Atualizar EPI</h3>
                 </div>
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
+
+                        <!-- Código de Barras -->
                         <div class="mb-3">
-                            <label for="{{ form.codigo_barras.id_for_label }}" class="form-label">Código de Barras:</label>
-                            <div class="input-group">
-                                {{ form.codigo_barras }}
-                                <button type="button" class="btn btn-secondary" id="gerar-codigo-btn">Gerar Código</button>
-                            </div>
+                            <label for="{{ form.codigo_barras.id_for_label }}" class="form-label">Código de Barras</label>
+                            {{ form.codigo_barras }}
                         </div>
-                        {{ form.as_p }}
+
+                        <!-- Nome do EPI -->
+                        <div class="mb-3">
+                            <label for="{{ form.nome.id_for_label }}" class="form-label">Nome do EPI</label>
+                            {{ form.nome }}
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="mb-3">
+                            <label for="{{ form.categoria.id_for_label }}" class="form-label">Categoria</label>
+                            {{ form.categoria }}
+                        </div>
+
+                        <!-- Validade -->
+                        <div class="mb-3">
+                            <label for="{{ form.validade.id_for_label }}" class="form-label">Validade</label>
+                            {{ form.validade }}
+                        </div>
+
+                        <!-- Fabricante -->
+                        <div class="mb-3">
+                            <label for="{{ form.fabricante.id_for_label }}" class="form-label">Fabricante</label>
+                            {{ form.fabricante }}
+                        </div>
+
+                        <!-- Quantidade Disponível -->
+                        <div class="mb-3">
+                            <label for="{{ form.quantidade_disponivel.id_for_label }}" class="form-label">Quantidade Disponível</label>
+                            {{ form.quantidade_disponivel }}
+                        </div>
+
+                        <!-- Botão de Envio -->
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">Salvar</button>
                         </div>
@@ -33,19 +62,4 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.getElementById('gerar-codigo-btn').addEventListener('click', function() {
-        fetch("{% url 'gerar_codigo_barras' %}", {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('{{ form.codigo_barras.id_for_label }}').value = data.novo_codigo;
-        });
-    });
-</script>
 {% endblock %}

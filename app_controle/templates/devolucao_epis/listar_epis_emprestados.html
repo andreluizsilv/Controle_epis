@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    Lista de EPIs Emprestados
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-warning text-white text-center">
+                    <h3>Lista de EPIs Emprestados</h3>
+                </div>
+                <div class="card-body">
+                    {% if emprestados %}
+                        <ul class="list-group">
+                            {% for epi in emprestados %}
+                                <li class="list-group-item">
+                                    <strong>Funcionário:</strong> {{ epi.funcionario.pessoa.nome }} <br>
+                                    <strong>Documento:</strong> {{ epi.documento }} <br>
+                                    <strong>EPI:</strong> {{ epi.epi.nome }} => Código de Barra: {{ epi.epi.codigo_barras }} => Qtd: {{ epi.quantidade }} <br>
+                                    <strong>Data de Entrega:</strong> {{ epi.data_entrega|date:"d/m/Y" }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-center text-muted">Nenhum EPI emprestado no momento.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

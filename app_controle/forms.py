@@ -1,5 +1,6 @@
 from django import forms
 from .models import *
+from .utils import gerar_codigo_barras
 
 
 class PessoaForm(forms.ModelForm):
@@ -19,31 +20,36 @@ class PessoaForm(forms.ModelForm):
         }
 
 
-
 class EPIForm(forms.ModelForm):
     class Meta:
         model = EPI
         fields = ['codigo_barras', 'nome', 'categoria', 'validade', 'fabricante', 'quantidade_disponivel']
         widgets = {
-            'codigo_barras': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
+            'codigo_barras': forms.TextInput(attrs={'class': 'form-control'}),
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
             'validade': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'fabricante': forms.TextInput(attrs={'class': 'form-control'}),
             'quantidade_disponivel': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
+
+
 class EntregaEpisForm(forms.ModelForm):
     class Meta:
-        model = EntregaEpis
-        fields = ['documento', 'funcionario', 'epi', 'data_entrega']
+        model = EntregaEpi
+        fields = ['documento', 'funcionario', 'epi', 'quantidade', 'data_entrega']
         widgets = {
+            'quantidade': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
             'data_entrega': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
 
+
 class DevolucaoEpisForm(forms.ModelForm):
     class Meta:
-        model = EntregaEpis
-        fields = ['devolvido', 'data_devolucao']
+        model = DevolverEpi
+        fields = ['documento', 'funcionario', 'epi', 'quantidade', 'data_devolucao']
         widgets = {
+            'quantidade': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
             'data_devolucao': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }

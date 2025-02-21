@@ -13,7 +13,7 @@ class Pessoa(models.Model):
     data_nascimento = models.DateField(verbose_name="Data de Nascimento")
 
     def __str__(self):
-        return f'{self.nome} - CPF: {self.cpf}'
+        return f'CPF: {self.cpf}'
 
 class Funcionario(models.Model):
     pessoa = models.OneToOneField(Pessoa, on_delete=models.CASCADE, verbose_name="Pessoa")
@@ -45,16 +45,26 @@ class EPI(models.Model):
     quantidade_disponivel = models.PositiveIntegerField(default=0, verbose_name="Quantidade Disponível")
 
     def __str__(self):
-        return f"{self.nome} (Cód: {self.codigo_barras}, Qtd: {self.quantidade_disponivel})"
+        return f"Produto: {self.nome} => Códgo de Barra: {self.codigo_barras} => Qtd: {self.quantidade_disponivel}"
 
 
-class EntregaEpis(models.Model):
+class EntregaEpi(models.Model):
     documento = models.ForeignKey(Pessoa, on_delete=models.CASCADE, verbose_name="Documento")
     funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE, verbose_name="Funcionário")
     epi = models.ForeignKey(EPI, on_delete=models.CASCADE, verbose_name="EPI")
+    quantidade = models.PositiveIntegerField(default=1, verbose_name="Quantidade Entregue")
     data_entrega = models.DateField(default=date.today, verbose_name="Data de Entrega")
-    devolvido = models.BooleanField(default=False, verbose_name="Devolvido")
+
+    def __str__(self):
+        return f"Entrega de {self.funcionario.pessoa.nome} - CPF: {self.documento.cpf} - {self.epi.nome} (Qtd: {self.quantidade}) em {self.data_entrega}"
+
+
+class DevolverEpi(models.Model):
+    documento = models.ForeignKey(Pessoa, on_delete=models.CASCADE, verbose_name="Documento")
+    funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE, verbose_name="Funcionário")
+    epi = models.ForeignKey(EPI, on_delete=models.CASCADE, verbose_name="EPI")
+    quantidade = models.PositiveIntegerField(default=1, verbose_name="Quantidade Devolvida")
     data_devolucao = models.DateField(null=True, blank=True, verbose_name="Data de Devolução")
 
     def __str__(self):
-        return f"Entrega de {self.epi.nome} para {self.funcionario.pessoa.nome} em {self.data_entrega}"
+        return f"Devolução de {self.funcionario.pessoa.nome} - CPF: {self.documento.cpf} - {self.epi.nome} (Qtd: {self.quantidade}) em {self.data_devolucao}"
